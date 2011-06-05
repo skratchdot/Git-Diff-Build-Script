@@ -1,0 +1,1 @@
+This folder could contain jar files used by the web project.

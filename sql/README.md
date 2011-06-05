@@ -1,0 +1,1 @@
+This folder could contain the sql files needed for the project.
