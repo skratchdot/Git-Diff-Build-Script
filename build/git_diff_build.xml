@@ -1,0 +1,48 @@
+<project name="Create Deployment Package via shell script" default="all" basedir=".">
+	<!-- Setup -->
+	<property name="bash" value="C:\Program Files\Git\bin\sh.exe" description="Path to sh.exe" />
+	<property name="branch_src" value="dev" description="The source/deployment branch." />
+	<property name="branch_dest" value="prod" description="The destination/restore branch." />
+	<property name="build_dir" value="../build" description="The path to this build directory" />
+	<property name="delete_exclude_list" value="git_diff_build.sh,git_diff_build.xml" description="A list of filenames in this dir to exclude from deletion." />
+	<property name="dir_name_new_prefix" value="build" description="A prefix for the directory that will contain the deploy and restore folders." />
+
+	<target name="delete_dirs">
+		<echo message="Deleting Directories: START" />
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}" includes="**/*" excludes="${delete_exclude_list}" />
+		</delete>
+		<echo message="Deleting Directories: END" />
+	</target>
+
+	<target name="get_dir_name" depends="delete_dirs">
+		<echo message="Creating New Directory: START" />
+		<tstamp>
+			<format property="dir_time" pattern="yyyyMMdd-hhmmss" />
+		</tstamp>
+		<property name="dir_name_new" value="${dir_name_new_prefix}-${dir_time}"/>
+		<echo message="Creating New Directory: END" />
+	</target>
+
+	<target name="create_deployment_package" depends="get_dir_name">
+		<echo message="Shell Script: START" />
+		<exec executable="${bash}" inputstring="${dir_name_new}${line.separator}${branch_src}${line.separator}${branch_dest}${line.separator}">
+			<arg value="--login" />
+			<arg value="-i" />
+			<arg value="git_diff_build.sh" />
+		</exec>
+		<echo message="Shell Script: END" />
+	</target>
+
+	<target name="refresh_eclipse" depends="create_deployment_package" description="Refresh ${basedir} directory">
+		<echo message="Refreshing ${basedir}: START" />
+		<eclipse.convertPath fileSystemPath="${basedir}" property="CURRENT_WORKSPACE_PATH" />
+		<eclipse.refreshLocal resource="${CURRENT_WORKSPACE_PATH}/${build_dir}" depth="infinite" />
+		<echo message="Refreshing ${basedir}: END" />
+	</target>
+
+	<target name="all" depends="delete_dirs, get_dir_name, create_deployment_package, refresh_eclipse">
+		<echo message="Build complete." />
+	</target>
+
+</project>
