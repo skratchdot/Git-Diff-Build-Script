@@ -33,9 +33,8 @@ function create_directory {
 
 	# Loop through file list, grabbing each file from the 
 	# correct branch in git, and writing it to disk
-	for i in $files
-	do
-		copy_file_from_branch "$branch_src" "$i"
+	echo "$files" | while read line; do
+		copy_file_from_branch "$branch_src" "${line}"
 	done
 
 	# Now move back to the main directory, and write
