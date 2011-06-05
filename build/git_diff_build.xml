@@ -1,8 +1,8 @@
 <project name="Create Deployment Package via shell script" default="all" basedir=".">
 	<!-- Setup -->
 	<property name="bash" value="C:\Program Files\Git\bin\sh.exe" description="Path to sh.exe" />
-	<property name="branch_src" value="dev" description="The source/deployment branch." />
-	<property name="branch_dest" value="prod" description="The destination/restore branch." />
+	<property name="branch_src" value="origin/dev" description="The source/deployment branch." />
+	<property name="branch_dest" value="origin/prod" description="The destination/restore branch." />
 	<property name="build_dir" value="../build" description="The path to this build directory" />
 	<property name="delete_exclude_list" value="git_diff_build.sh,git_diff_build.xml" description="A list of filenames in this dir to exclude from deletion." />
 	<property name="dir_name_new_prefix" value="build" description="A prefix for the directory that will contain the deploy and restore folders." />
